@@ -48,9 +48,9 @@
     "xlsx": "^0.16.7"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
+    "start": "NODE_OPTIONS=--openssl-legacy-provider react-app-rewired start",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider react-app-rewired build",
+    "test": "NODE_OPTIONS=--openssl-legacy-provider react-app-rewired test",
     "eject": "react-app-rewired eject"
   },
   "eslintConfig": {
@@ -70,5 +70,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "resolutions": {
+    "@babel/core": "^7.22.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  },
+  "packageManager": "yarn@4.12.0"
 }
