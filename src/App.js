@@ -56,7 +56,7 @@ const AdminDashboard = () => {
     if (isEmpty(data)) {
       window.location.href = '/login';
     }
-  }, [currentAdmin?.roles]);
+  }, [currentAdmin]);
 
   useEffect(() => {
     if (!token && isEmpty(currentAdmin)) {
