@@ -2,22 +2,17 @@ import React, { useEffect, useState, useMemo } from "react";
 import {
   Form,
   Input,
-  Upload,
   Checkbox,
   Select,
-  Button,
-  message,
   Table,
 } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
-import reqwest from "reqwest";
 
 import { QUERY_CURRENT_ORDER, ADD_ORDER } from "api";
 import { ORDER_STATUS } from "utils/constant";
 import Link from "components/Link";
 import { LIST_ORDERS, PRODUCT_UPDATE } from "config/urls";
-import { PriceNumber, InputUNumber } from "components/Input";
+import { PriceNumber } from "components/Input";
 import { ActionButtons } from "components/Form";
 import { openNotification } from "components/Form";
 

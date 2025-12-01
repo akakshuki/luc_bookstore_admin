@@ -13,8 +13,10 @@ const colors = {
 const fontSizes = [12, 14, 16, 20, 24, 40];
 const space = [0, 2, 4, 8, 16, 24, 32, 40, 48, 56, 68];
 
-export default {
+const theme = {
   space,
   fontSizes,
   colors,
 };
+
+export default theme;

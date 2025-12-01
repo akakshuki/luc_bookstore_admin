@@ -48,7 +48,7 @@ export const slugify = (text) => {
     .toLowerCase()
     .replace(/\s+/g, "-") // Replace spaces with -
     .replace(p, (c) => b.charAt(a.indexOf(c))) // Replace special chars
-    .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+    .replace(/[^\w-]+/g, "") // Remove all non-word chars
     .replace(/--+/g, "-") // Replace multiple - with single -
     .replace(/^-+|-+$/g, ""); // replace leading - trailing space
 };

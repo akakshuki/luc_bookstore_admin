@@ -34,7 +34,7 @@ const Login = (props) => {
       });
       if (resCurrentAdmin) {
         let data = resCurrentAdmin?.roles?.filter(
-          (x) => x?.id == 1 || x?.id == 2
+          (x) => x?.id === 1 || x?.id === 2
         );
         if (!isEmpty(data)) {
           localStorage.setItem("currentAdmin", JSON.stringify(resCurrentAdmin));
