@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table, Button, Tag } from "antd";
 
 import Link from "components/Link";
-import { ORDER_UPDATE, ORDER_ADD } from "config/urls";
+import { ORDER_UPDATE } from "config/urls";
 import { QUERY_ORDERS, DELETE_ORDER } from "api";
 import { generateActionColumns } from "components/Table";
 import { openConfirm } from "components/Form";
