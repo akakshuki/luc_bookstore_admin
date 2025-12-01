@@ -52,11 +52,11 @@ const AdminDashboard = () => {
   const currentAdmin = useMemo(() => JSON.parse(localStorage.getItem('currentAdmin')), []);
 
   useEffect(() => {
-    let data = currentAdmin?.roles?.filter((x) => x?.id == 1 || x?.id == 2);
+    let data = currentAdmin?.roles?.filter((x) => x?.id === 1 || x?.id === 2);
     if (isEmpty(data)) {
       window.location.href = '/login';
     }
-  }, []);
+  }, [currentAdmin?.roles]);
 
   useEffect(() => {
     if (!token && isEmpty(currentAdmin)) {
