@@ -99,7 +99,17 @@ const Dashboard = () => {
       title: "Date",
       dataIndex: "createdAt",
       key: "createdAt",
-      render: (text) => moment(text).format(DATE_FORMAT),
+      render: (text) => {
+        if (!text) return "N/A";
+        // Try parsing the date - handle both ISO format and DD/MM/YYYY HH:mm:ss format
+        const date = moment(text, ["YYYY-MM-DDTHH:mm:ss.SSSZ", "DD/MM/YYYY HH:mm:ss", "YYYY-MM-DD HH:mm:ss"], true);
+        if (date.isValid()) {
+          return date.format(DATE_FORMAT);
+        }
+        // Fallback to automatic parsing
+        const fallbackDate = moment(text);
+        return fallbackDate.isValid() ? fallbackDate.format(DATE_FORMAT) : "Invalid date";
+      },
     },
     {
       title: "Total Price",
