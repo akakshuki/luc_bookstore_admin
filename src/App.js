@@ -10,23 +10,13 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { MenuLinks, ActionLinks } from './config/mapping';
 
 import './App.css';
-import theme from './theme';
+import { lightTheme, darkTheme } from './theme';
 import { Login } from './containers';
 import { LOGIN } from './config/urls';
-const { Footer, Header, Sider, Content } = Layout;
+import { ThemeContextProvider, useTheme } from './context/ThemeContext';
+import ThemeToggle from './components/ThemeToggle';
 
-const styles = {
-  layout: { minHeight: '100vh' },
-  headerButton: { float: 'right', color: 'white', marginRight: 40 },
-  header: { background: '#16161D', padding: 0, paddingLeft: 16 },
-  content: {
-    margin: '24px 16px',
-    padding: 24,
-    background: '#fff',
-    minHeight: 280,
-  },
-  footer: { textAlign: 'center' },
-};
+const { Footer, Header, Sider, Content } = Layout;
 
 const onMenuClick = ({ item, key, keyPath, domEvent }) => {
   if (key === 'logout') {
@@ -50,6 +40,25 @@ const AdminDashboard = () => {
   const { menu, urls } = createMenuAndUrls(MenuLinks);
   const routers = createRouters([...urls, ...ActionLinks]);
   const currentAdmin = useMemo(() => JSON.parse(localStorage.getItem('currentAdmin')), []);
+  const { resolvedMode } = useTheme();
+
+  // Dynamic styles based on theme
+  const styles = {
+    layout: { minHeight: '100vh' },
+    headerButton: { float: 'right', color: 'white', marginRight: 40, display: 'flex', alignItems: 'center' },
+    header: {
+      background: resolvedMode === 'dark' ? '#141414' : '#16161D', // Use dark component bg or keep original header color
+      padding: 0,
+      paddingLeft: 16
+    },
+    content: {
+      margin: '24px 16px',
+      padding: 24,
+      background: resolvedMode === 'dark' ? '#141414' : '#fff',
+      minHeight: 280,
+    },
+    footer: { textAlign: 'center' },
+  };
 
   useEffect(() => {
     let data = currentAdmin?.roles?.filter((x) => x?.id === 1 || x?.id === 2);
@@ -63,9 +72,16 @@ const AdminDashboard = () => {
       window.location.href = '/login';
     }
   }, [token, currentAdmin]);
+
   return (
     <Layout style={styles.layout}>
-      <Sider theme={'light'} width={230} collapsible collapsed={collapsed} onCollapse={setCollapsed}>
+      <Sider
+        theme={resolvedMode === 'dark' ? 'dark' : 'light'}
+        width={230}
+        collapsible
+        collapsed={collapsed}
+        onCollapse={setCollapsed}
+      >
         {collapsed ? (
           <div
             style={{
@@ -87,6 +103,7 @@ const AdminDashboard = () => {
       <Layout>
         <Header style={styles.header}>
           <div style={styles.headerButton}>
+            <ThemeToggle />
             <Dropdown overlay={UserSettingDropdown}>
               <Button type="link" style={{ color: 'white' }}>
                 {`Hello, ${currentAdmin?.name || 'Admin'}`}
@@ -103,18 +120,27 @@ const AdminDashboard = () => {
   );
 };
 
+// Wrapper component to provide theme to Styled Components
+const StyledThemeProvider = ({ children }) => {
+  const { resolvedMode } = useTheme();
+  const theme = resolvedMode === 'dark' ? darkTheme : lightTheme;
+  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+}
+
 const App = ({ t }) => {
   return (
-    <ThemeProvider theme={theme}>
-      <Provider store={store}>
-        <Router>
-          <Switch>
-            <Route exact path={LOGIN} component={Login} />
-            <Route path="/" component={() => <AdminDashboard t={t} />} />
-          </Switch>
-        </Router>
-      </Provider>
-    </ThemeProvider>
+    <ThemeContextProvider>
+      <StyledThemeProvider>
+        <Provider store={store}>
+          <Router>
+            <Switch>
+              <Route exact path={LOGIN} component={Login} />
+              <Route path="/" component={() => <AdminDashboard t={t} />} />
+            </Switch>
+          </Router>
+        </Provider>
+      </StyledThemeProvider>
+    </ThemeContextProvider>
   );
 };
 
