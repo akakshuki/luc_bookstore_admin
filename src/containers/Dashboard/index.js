@@ -30,8 +30,10 @@ const Dashboard = () => {
       setError(null);
 
       // Fetch all data in parallel
+      // Note: For accurate revenue calculation, we fetch more orders
+      // In production, consider implementing a dedicated dashboard stats endpoint
       const [ordersResponse, productsResponse, usersResponse, categoriesResponse] = await Promise.all([
-        QUERY_ORDERS(null, { page: 1, limit: 100 }),
+        QUERY_ORDERS(null, { page: 1, limit: 1000 }),
         QUERY_PRODUCTS(null, { page: 1, limit: 1000 }),
         QUERY_USERS(null, { page: 1, limit: 1000 }),
         QUERY_CATEGORIES(null, { page: 1, limit: 100 }),
@@ -196,39 +198,44 @@ const Dashboard = () => {
       {categoryStats.length > 0 && (
         <Card title="Products per Category">
           <div>
-            {categoryStats.map((category, index) => (
-              <div
-                key={index}
-                style={{
-                  marginBottom: 16,
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <div style={{ width: 150, marginRight: 16 }}>
-                  {category.name}
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div
-                    style={{
-                      height: 30,
-                      backgroundColor: "#1890ff",
-                      width: `${Math.min((category.productCount / Math.max(...categoryStats.map(c => c.productCount))) * 100, 100)}%`,
-                      borderRadius: 4,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "flex-end",
-                      paddingRight: 8,
-                      color: "white",
-                      fontWeight: "bold",
-                      minWidth: 40,
-                    }}
-                  >
-                    {category.productCount}
+            {categoryStats.map((category) => {
+              const maxCount = Math.max(...categoryStats.map(c => c.productCount), 1);
+              const widthPercentage = maxCount > 0 ? (category.productCount / maxCount) * 100 : 0;
+              
+              return (
+                <div
+                  key={category.name}
+                  style={{
+                    marginBottom: 16,
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <div style={{ width: 150, marginRight: 16 }}>
+                    {category.name}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div
+                      style={{
+                        height: 30,
+                        backgroundColor: "#1890ff",
+                        width: `${Math.min(widthPercentage, 100)}%`,
+                        borderRadius: 4,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                        paddingRight: 8,
+                        color: "white",
+                        fontWeight: "bold",
+                        minWidth: 40,
+                      }}
+                    >
+                      {category.productCount}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Card>
       )}
