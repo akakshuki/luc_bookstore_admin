@@ -7,6 +7,13 @@ import { currencyFormat } from "utils/currencyFormat";
 import Link from "components/Link";
 import { ORDER_UPDATE } from "config/urls";
 
+// Supported date formats for parsing
+const DATE_PARSE_FORMATS = [
+  "YYYY-MM-DDTHH:mm:ss.SSSZ", // ISO 8601 format
+  "DD/MM/YYYY HH:mm:ss",       // Backend format with time
+  "YYYY-MM-DD HH:mm:ss",       // Alternative backend format
+];
+
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -101,8 +108,8 @@ const Dashboard = () => {
       key: "createdAt",
       render: (text) => {
         if (!text) return "N/A";
-        // Try parsing the date - handle both ISO format and DD/MM/YYYY HH:mm:ss format
-        const date = moment(text, ["YYYY-MM-DDTHH:mm:ss.SSSZ", "DD/MM/YYYY HH:mm:ss", "YYYY-MM-DD HH:mm:ss"], true);
+        // Try parsing with multiple supported formats
+        const date = moment(text, DATE_PARSE_FORMATS, true);
         if (date.isValid()) {
           return date.format(DATE_FORMAT);
         }
