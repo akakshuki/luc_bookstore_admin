@@ -5,6 +5,7 @@ import { isEmpty } from "lodash";
 import { LOGIN, QUERY_CURRENT_ADMIN } from "api";
 import { openNotification } from "components/Form";
 import { DASHBOARD, LOGIN as LOGIN_ROUTE } from "config/urls";
+import { handleSSOLogin } from "utils/authHandlers";
 
 const layout = {
   labelCol: { span: 8 },
@@ -95,6 +96,13 @@ const Login = (props) => {
             <Form.Item {...tailLayout}>
               <Button type="primary" htmlType="submit">
                 Submit
+              </Button>
+              <Button
+                type="default"
+                style={{ marginLeft: "10px" }}
+                onClick={handleSSOLogin}
+              >
+                Sign in with SSO
               </Button>
             </Form.Item>
           </Form>
